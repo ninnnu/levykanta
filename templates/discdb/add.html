@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+075678263224
+{% if added %}
+  CD lisätty onnistuneesti
+{% endif %}
+<form method="post" action="/discdb/add/">{% csrf_token %}
+    <div class="ui-widget">
+    Viivakoodi / Haku: <input id="id_barcode" type="text" name="barcode" maxlength="255" />
+    </div>
+    {% for field in discform %}
+    <div class="fieldWrapper">
+        {% if field.label_tag != discform.barcode.label_tag %} {# Ugly hack #}
+            {% if not added %}
+              {{ field.errors }}
+            {% endif %}
+            {{ field.label_tag }}: {{ field }}
+        {% endif %}
+    </div>
+    {% endfor %}
+    <div id="tracks">
+    <ul>
+    </ul>
+    </div>
+    <input type="text" hidden="yes" name="track_ids" value="" />
+    <input type="submit" value="Lisää" />
+</form>
+{% endblock %}

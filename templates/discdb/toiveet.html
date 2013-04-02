@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+{% if granted|length > 0 or not_granted|length > 0 %}
+    <h2>Toteuttamattomat</h2>
+    <ul>
+    {% for wish in not_granted %}
+        <li><form class="grantwish" action="/discdb/done/" method="POST">{% csrf_token %}<input type="hidden" name="wishid" value="{{wish.pk}}" /> <input type="submit" value="Toteuta"></form>{{wish.track}}
+        {% if wish.discs|length > 0 %}
+        <br />
+        Löytyy levyiltä:
+        <ul>
+            {% for disc in wish.discs %}
+               <li>{{ disc.artist }} - {{ disc.name }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+    <h2>Toteutetut</h2>
+    <ul>
+    {% for wish in granted %}
+        <li>{{wish.track}}
+        {% if wish.discs|length > 0 %}
+        <br />
+        Löytyy levyiltä:
+        <ul>
+            {% for disc in wish.discs %}
+               <li>{{ disc.artist }} - {{ disc.name }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Toiveita ei ole tehty.</p>
+{% endif %}
+{% endblock %}

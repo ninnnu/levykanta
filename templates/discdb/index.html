@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+{% if cd_list %}
+    <ul>
+    {% for cd in cd_list %}
+        <li><a href="/discdb/show/{{ cd.id }}/">{{ cd.artist }} - {{ cd.name }}</a>
+        {% if user %}
+            (<a href="/discdb/from/{{cd.owner.id}}/">{{cd.owner.name}}</a>)
+        {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No CDs are available.</p>
+{% endif %}
+{% endblock %}

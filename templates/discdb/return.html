@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+075678263224
+{% if returned %}
+  CD palautettu
+{% endif %}
+<form method="post" action="/discdb/return/">{% csrf_token %}
+    <div class="ui-widget">
+    Viivakoodi / Haku: <input id="id_returncode" type="text" name="barcode" maxlength="255" />
+    </div>
+    <div class="fieldWrapper">
+        Levy: <div class="inline" id="artist"></div> - <div class="inline" id="name"></div><br />
+        Omistaja: <div class="inline" id="owner"></div>
+    </div>
+    <input type="submit" value="Palauta" />
+</form>
+{% endblock %}

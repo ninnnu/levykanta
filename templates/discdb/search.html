@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="fieldWrapper">
+<form method="post" action="/discdb/search/">{% csrf_token %}
+<label for="id_track">Kappaleen nimi</label> <input id="id_track" type="text" name="track" /> <input type="submit" value="Hae" />
+</form>
+</div>
+<div class="fieldWrapper">
+<form method="post" action="/discdb/search/">{% csrf_token %}
+<label for="id_artist">Artistin nimi</label> <input id="id_artist" type="text" name="artist" /> <input type="submit" value="Hae" />
+</form>
+</div>
+<div class="fieldWrapper">
+<form method="post" action="/discdb/search/">{% csrf_token %}
+<label for="id_disc">Levyn nimi</label> <input id="id_disc" type="text" name="disc" /> <input type="submit" value="Hae" />
+</form>
+</div>
+{% if results %}
+<ul>
+{% for res in results %}
+  <li><a href="{{ res.url }}">{{ res.name }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

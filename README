@@ -1,0 +1,1 @@
+CD database for Wappuradio. Advanced features (autocomplete, UPC reading, song lists) require a MySQL-database loaded with Discogs.com database-dump.

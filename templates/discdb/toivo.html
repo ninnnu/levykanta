@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+{% if added %}
+  Toive vastaanotettu. Se joko toteutetaan tai ei.
+{% else %}
+<form method="post" action="/discdb/request/">{% csrf_token %}
+    {{ wishform.track.label_tag }}: {{ wishform.track }}
+    <input type="submit" value="Lisää" />
+</form>
+{% endif %}
+{% endblock %}

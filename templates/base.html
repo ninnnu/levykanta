@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>{% block title %}{% endblock %} - Wappuradion levykanta</title>
+<link rel="stylesheet" href="/static/css/style.css" type="text/css" />
+<link rel="stylesheet" href="/static/css/blitzer.css" type="text/css" />
+<script type="text/javascript" src="/static/js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+
+{% if user %}
+<script type="text/javascript" src="/static/js/barcode_fill.js"></script>
+{% endif %}
+
+</head>
+<body>
+<div id="header">
+<a href="/discdb/">Etusivu</a> /
+{% if user %}
+<a href="/discdb/add/">Lisää</a> /
+<a href="/discdb/search/">Haku</a> /
+<a href="/discdb/show_requests/">Näytä toiveet</a> /
+<a href="/discdb/return/">Palauta levyjä</a> / 
+{% else %}
+<a href="/discdb/login/">Kirjaudu sisään</a> /
+{% endif %}
+<a href="/discdb/request/">Toivo</a>
+</div>
+{% block content %}{% endblock %}
+</body>
+</html>
