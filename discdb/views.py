@@ -10,7 +10,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.core import serializers
 from django.conf import settings
-from barcode import Barcode, NotFound
+# from barcode import Barcode, NotFound
 
 import simplejson
 import MySQLdb # Discogs
@@ -97,13 +97,22 @@ def suggest(request):
     else:
         results = dbc.execute("SELECT id, artist, title FROM discogs WHERE MATCH(artist, title) AGAINST (%s IN BOOLEAN MODE) GROUP BY artist, title", (request.POST['input'],)) 
     
+    freeCD = False
+
     if(results > 20):
         return HttpResponse(simplejson.dumps([{'value': -1, 'label': "Liikaa tuloksia"}]))
+    if(results == 0):  # Plan B: Try FreeCD
+        freeCD = True
+        dbc.execute("SELECT cd_id, artist, title FROM freecd WHERE MATCH(artist, title) AGAINST(%s IN BOOLEAN MODE) GROUP BY artist, title", (request.POST['input'],))
 
     row = dbc.fetchone()
     results = []
     while(row):
-        results.append({'value': row[0], 'label': "%s - %s" % (row[1], row[2])})
+        if(freeCD == True):
+            results.append({'value': "f_"+str(row[0]), 'label': "%s - %s" % (row[1], row[2])})
+        else:
+            results.append({'value': row[0], 'label': "%s - %s" % (row[1], row[2])})
+
         row = dbc.fetchone()
     results.append({'value':0, 'label': u"Lisää oma"})
     return HttpResponse(simplejson.dumps(results))
@@ -135,10 +144,21 @@ def lookup_cdid(request, cd_id):
         return HttpResponseRedirect("/discdb/")
     db = MySQLdb.connect(settings.DISCOGS_SERVER, settings.DISCOGS_USERNAME, settings.DISCOGS_PASSWORD, settings.DISCOGS_DATABASE)
     dbc = db.cursor()
-    dbc.execute("SELECT artist, title, barcode FROM discogs WHERE id = %s", (cd_id,))
+    
+    if(cd_id[0] == "f"):
+        freeCD = True
+        cd_id = cd_id[2:]
+        dbc.execute("SELECT artist, title, 0 FROM freecd WHERE cd_id = %s", (cd_id,))
+    else:
+        freeCD = False
+        dbc.execute("SELECT artist, title, barcode FROM discogs WHERE id = %s", (cd_id,))
     cd = dbc.fetchone()
+    
     tracks = []
-    dbc.execute("SELECT artist, title FROM discogs_tracks WHERE cd_id = %s", (cd_id,))
+    if(freeCD == True):
+        dbc.execute("SELECT artist, title FROM freetracks WHERE disc = %s", (cd_id,))
+    else:
+        dbc.execute("SELECT artist, title FROM discogs_tracks WHERE cd_id = %s", (cd_id,))
     row = dbc.fetchone()
     while(row):
         tracks.append({'artist': row[0], 'title': row[1]})
