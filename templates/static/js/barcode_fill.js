@@ -25,7 +25,7 @@ $(document).ready(function() {
                   console.log(data);
                   $('[name="artist"]').val(data.artist);
                   $('[name="name"]').val(data.title);
-                  if(data.barcode.length() > 2) {
+                  if(data.barcode.length > 2) {
                       $("#id_barcode").val(data.barcode);
                   }
                   $.each(data.tracks, function(index, track) {
