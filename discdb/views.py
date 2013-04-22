@@ -245,7 +245,7 @@ def search_view(request):
                 results.append({'name': name, 'url': url})
 
         elif('disc' in request.POST):
-            res = Disc.objects.filter(artist__icontains = request.POST['disc'])
+            res = Disc.objects.filter(name__icontains = request.POST['disc'])
             for r in res:
                 name = r.artist+" - "+r.name
                 url = "/discdb/show/"+str(r.pk)+"/"            
