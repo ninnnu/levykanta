@@ -99,7 +99,7 @@ def suggest(request):
     
     freeCD = False
 
-    if(results > 20):
+    if(results > 1000):
         return HttpResponse(simplejson.dumps([{'value': -1, 'label': "Liikaa tuloksia"}]))
     if(results == 0):  # Plan B: Try FreeCD
         freeCD = True
