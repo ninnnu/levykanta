@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 from django.template import Context, loader, RequestContext
 from discdb.models import Disc, DiscForm, NewDiscForm, TrackForm, Owner, Track, Wish, WishForm
+from django.db.models import Q # OR-queries
 # from discdb.forms import NewDiscForm, DiscForm, TrackForm, BarcodeForm, WishForm
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -231,7 +232,7 @@ def search_view(request):
         results = []
         
         if('track' in request.POST):
-            res = Track.objects.filter(name__icontains = request.POST['track'])
+            res = Track.objects.filter(Q(name__icontains = request.POST['track']) | Q(artist__icontains = request.POST['track']))
             for r in res:
                 name = r.artist+" - "+r.name+" ("+r.disc.name+")"
                 url = "/discdb/show/"+str(r.disc.pk)+"/"
