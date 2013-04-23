@@ -234,7 +234,10 @@ def search_view(request):
         if('track' in request.POST):
             res = Track.objects.filter(Q(name__icontains = request.POST['track']) | Q(artist__icontains = request.POST['track']))
             for r in res:
-                name = r.artist+" - "+r.name+" ("+r.disc.name+")"
+                try:
+                    name = r.artist+" - "+r.name+" ("+r.disc.name+")"
+                except:
+                    pass
                 url = "/discdb/show/"+str(r.disc.pk)+"/"
                 results.append({'name': name, 'url': url})
         
@@ -295,7 +298,7 @@ def show_wishes(request):
                     continue
         else:
             wish.discs = list()
-            tracks = Track.objects.filter(name__icontains = track)
+            tracks = Track.objects.filter(name__icontains = wish.track)
             for match in tracks:
                 try:
                     wish.discs.append(match.disc)
