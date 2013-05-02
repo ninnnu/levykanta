@@ -126,7 +126,7 @@ def suggest_cataloged(request):
     if(inp.isdigit() and len(inp) >= 8):
         results_raw = Disc.get(barcode = inp, returned = False)
     else:
-        results_raw = Disc.objects.filter(artist__icontains = inp, returned = False)
+        results_raw = Disc.objects.filter(Q(name__icontains = inp) | Q(artist__icontains = inp), returned = False)
     results = []
     for r in results_raw:
         results.append({'value':r.id, 'label': "%s - %s" % (r.artist, r.name)})
@@ -236,9 +236,9 @@ def search_view(request):
             for r in res:
                 try:
                     name = r.artist+" - "+r.name+" ("+r.disc.name+")"
+                    url = "/discdb/show/"+str(r.disc.pk)+"/"
                 except:
-                    pass
-                url = "/discdb/show/"+str(r.disc.pk)+"/"
+                    continue
                 results.append({'name': name, 'url': url})
         
         elif('artist' in request.POST):
@@ -284,16 +284,20 @@ def show_wishes(request):
     c['granted'] = list()
     c['not_granted'] = list()
     for wish in Wish.objects.all():
+        wish.track = wish.track.replace(u"Ã¶", u"ö")
+        wish.track = wish.track.replace(u"Ã¤", u"ä")
+        if(wish.done == True):
+            wish.discs = list()
+            c['granted'].append(wish)
+            continue
         if(wish.track.find(" - ") > 0):
             wish.discs = list()
             artist = wish.track.split(" - ")[0]
             track = wish.track.split(" - ")[1]
             tracks = Track.objects.filter(artist__icontains = artist, name__icontains = track)
-            print tracks
             for match in tracks:
                 try:
                     wish.discs.append(match.disc)
-                    print match.disc.name
                 except:
                     continue
         else:
@@ -304,11 +308,7 @@ def show_wishes(request):
                     wish.discs.append(match.disc)
                 except:
                     continue
-           
-        if(wish.done == True):
-            c['granted'].append(wish)
-        else:
-            c['not_granted'].append(wish)
+        c['not_granted'].append(wish)
     c.update(csrf(request))
     return render_to_response("discdb/toiveet.html", c, context_instance=RequestContext(request))
 
