@@ -22,23 +22,23 @@ $(document).ready(function() {
                       setTimeout(function() {$("#id_barcode").val(old_barcode); }, 10);
                   }
                   $.get("/discdb/lookup/cd/"+ui.item.value+"/", function(data) {
-                  console.log(data);
-                  $('[name="artist"]').val(data.artist);
-                  $('[name="name"]').val(data.title);
-                  if(data.barcode.length > 2) {
-                      $("#id_barcode").val(data.barcode);
-                  }
-                  $.each(data.tracks, function(index, track) {
-                      if(data.artist != "Various") {
-                          track.artist = data.artist;
+                      console.log(data);
+                      $('[name="artist"]').val(data.artist);
+                      $('[name="name"]').val(data.title);
+                      if(data.barcode.length > 2) {
+                          $("#id_barcode").val(data.barcode);
                       }
-                      $("#tracks").append("<li>"+track.artist+" - "+track.title+"</li>");
-                      $.post("/discdb/track/add/", {"artist": track.artist, "name": track.title, "csrfmiddlewaretoken": $('[name="csrfmiddlewaretoken"]').val()}, function(data) {
+                      $.each(data.tracks, function(index, track) {
+                          if(data.artist != "Various") {
+                              track.artist = data.artist;
+                          }
+                          $("#tracks").append("<li>"+track.artist+" - "+track.title+"</li>");
+                          $.post("/discdb/track/add/", {"artist": track.artist, "name": track.title, "csrfmiddlewaretoken": $('[name="csrfmiddlewaretoken"]').val()}, function(data) {
                              $('[name="track_ids"]').val($('[name="track_ids"]').val()+","+data);
-                      }, 'text');
-                  });
-                }, 'json');
-            }
+                          }, 'text');
+                      });
+                  }, 'json');
+             }
         },
         response: function(ev, ui) {
             disable_entertab = false;
