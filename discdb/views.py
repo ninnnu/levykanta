@@ -22,6 +22,11 @@ def index(request):
     c = { 'cd_list': cd_list }
     return render_to_response('discdb/index.html', c, context_instance=RequestContext(request))
 
+def show_all(request):
+    cd_list = Disc.objects.all().order_by("artist")
+    c = { 'cd_list': cd_list }
+    return render_to_response('discdb/showall.html', c, context_instance=RequestContext(request))
+
 def show(request, cd_id):
     if not request.user.is_authenticated():
         return HttpResponseRedirect("/discdb/")
@@ -43,9 +48,13 @@ def show(request, cd_id):
 
 def show_by_author(request, author_id):
     cd_list = Disc.objects.filter(owner = author_id, returned = False).order_by("artist")
-    # c = { 'cd_list': cd_list }
     c = { 'cd_list': cd_list }
     return render_to_response('discdb/index.html', c, context_instance=RequestContext(request))
+
+def show_all_author(request, author_id):
+    cd_list = Disc.objects.filter(owner = author_id).order_by("artist")
+    c = { 'cd_list': cd_list }
+    return render_to_response('discdb/showall.html', c, context_instance=RequestContext(request))
 
 def add_disc(request):
     if request.user.is_authenticated() == False:

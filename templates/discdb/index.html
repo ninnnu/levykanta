@@ -3,9 +3,11 @@
 {% if cd_list %}
     <ul>
     {% for cd in cd_list %}
-        <li><a href="/discdb/show/{{ cd.id }}/">{{ cd.artist }} - {{ cd.name }}</a>
         {% if user %}
+            <li><a href="/discdb/show/{{ cd.id }}/">{{ cd.artist }} - {{ cd.name }}</a>
             (<a href="/discdb/from/{{cd.owner.id}}/">{{cd.owner.name}}</a>)
+        {% else %}
+            <li>{{ cd.artist }} - {{ cd.name }}</li>
         {% endif %}
         </li>
     {% endfor %}
