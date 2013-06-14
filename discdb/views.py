@@ -11,7 +11,6 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.core import serializers
 from django.conf import settings
-# from barcode import Barcode, NotFound
 
 import simplejson
 import MySQLdb # Discogs

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+{% if cd_list %}
+    <ul>
+    {% for cd in cd_list %}
+        {% if user %}
+            <li {% if cd.returned %} class="returned" {% endif %}><a href="/discdb/show/{{ cd.id }}/">{{ cd.artist }} - {{ cd.name }}</a>
+            (<a href="/discdb/from/{{cd.owner.id}}/">{{cd.owner.name}}</a>)
+        {% else %}
+            <li>{{ cd.artist }} - {{ cd.name }}
+        {% endif %}
+        {% if cd.returned %}
+		(Palautettu)
+	{% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No CDs are available.</p>
+{% endif %}
+{% endblock %}
