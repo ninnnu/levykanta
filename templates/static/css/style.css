@@ -22,3 +22,8 @@ div.fieldWrapper {
 .inline {
     display: inline;
 }
+
+#dup_varoitus {
+    display: none;
+    color: #FF0000;
+}

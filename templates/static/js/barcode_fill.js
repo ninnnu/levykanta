@@ -25,6 +25,9 @@ $(document).ready(function() {
                       console.log(data);
                       $('[name="artist"]').val(data.artist);
                       $('[name="name"]').val(data.title);
+                      if(data.duplicate == true) {
+                          $("#dup_varoitus").show();
+                      }
                       if(data.barcode.length > 2) {
                           $("#id_barcode").val(data.barcode);
                       }
