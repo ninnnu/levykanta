@@ -172,7 +172,14 @@ def lookup_cdid(request, cd_id):
     while(row):
         tracks.append({'artist': row[0], 'title': row[1]})
         row = dbc.fetchone()
-    entry = {'artist': cd[0], 'title': cd[1], 'barcode': cd[2], 'tracks': tracks}
+    
+    entry = {
+         'artist': cd[0], 
+         'title': cd[1], 
+         'barcode': cd[2], 
+         'tracks': tracks, 
+         'duplicate': is_duplicate(cd[0], cd[1]), 
+    }
     return HttpResponse(simplejson.dumps(entry))
 
 def lookup_code(request, barcode):
@@ -342,3 +349,10 @@ def return_disc(request):
             d.save()
             c['returned'] = True
     return render_to_response("discdb/return.html", c, context_instance=RequestContext(request))
+
+def is_duplicate(artist_, name_):
+    d = Disc.objects.filter(name = name_, artist = artist_)
+    if(len(d) > 0):
+        return True
+    return False
+
