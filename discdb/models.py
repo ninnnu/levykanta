@@ -7,6 +7,7 @@ class Disc(models.Model):
     name = models.CharField("Levyn nimi", max_length = 100)
     owner = models.ForeignKey('Owner', related_name='owners', unique=False)
     returned = models.BooleanField("Palautettu")
+    cdlp = models.CharField("CD/LP", max_length=20, default="CD")
     barcode = models.CharField("Viivakoodi", max_length = 16, blank=True)
     tracks = models.ManyToManyField('Track', related_name='tracks', db_table="Discs_to_Tracks", blank = True)
     def __unicode__(self):
@@ -39,6 +40,7 @@ class NewDiscForm(forms.ModelForm):
         exclude = ('returned', 'tracks')
         widgets = {
             'owner': forms.TextInput(),
+            'cdlp': forms.ChoiceField(choices=([("CD", "CD"), ("LP","LP")]), initial="CD"),
             'name': forms.TextInput(attrs={'readonly': 'yes'}),
             'artist': forms.TextInput(attrs={'readonly': 'yes'})
         }
