@@ -40,7 +40,7 @@ class NewDiscForm(forms.ModelForm):
         exclude = ('returned', 'tracks')
         widgets = {
             'owner': forms.TextInput(),
-            'cdlp': forms.ChoiceField(choices=([("CD", "CD"), ("LP","LP")]), initial="CD"),
+            'cdlp': forms.Select(choices=([("CD", "CD"), ("LP","LP")]),  attrs={}),
             'name': forms.TextInput(attrs={'readonly': 'yes'}),
             'artist': forms.TextInput(attrs={'readonly': 'yes'})
         }
