@@ -98,6 +98,7 @@ def suggest(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect("/discdb/")
     db = MySQLdb.connect(settings.DISCOGS_SERVER, settings.DISCOGS_USERNAME, settings.DISCOGS_PASSWORD, settings.DISCOGS_DATABASE)
+    db.set_character_set("utf8")
     dbc = db.cursor()
     inp = request.POST['input']
     
@@ -152,6 +153,7 @@ def lookup_cdid(request, cd_id):
     if not request.user.is_authenticated():
         return HttpResponseRedirect("/discdb/")
     db = MySQLdb.connect(settings.DISCOGS_SERVER, settings.DISCOGS_USERNAME, settings.DISCOGS_PASSWORD, settings.DISCOGS_DATABASE)
+    db.set_character_set("utf8")
     dbc = db.cursor()
     
     if(cd_id[0] == "f"):
