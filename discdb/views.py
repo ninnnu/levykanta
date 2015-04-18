@@ -105,15 +105,15 @@ def suggest(request):
     if(inp.isdigit() and len(inp) >= 8):
         results = dbc.execute("SELECT id, artist, title FROM discogs WHERE barcode = %s GROUP BY artist, title", (inp,))
     else:
-        results = dbc.execute("SELECT id, artist, title FROM discogs WHERE MATCH(artist, title) AGAINST (%s IN BOOLEAN MODE) GROUP BY artist, title", (request.POST['input'],)) 
-    
+        results = dbc.execute("SELECT COUNT(*) FROM discogs WHERE MATCH(artist, title) AGAINST (%s IN BOOLEAN MODE)", (request.POST['input'],))
+        if(results <= 100):
+            results = dbc.execute("SELECT id, artist, title FROM discogs WHERE MATCH(artist, title) AGAINST (%s IN BOOLEAN MODE) GROUP BY artist, title", (request.POST['input'],)) 
+        else:
+            return HttpResponse(simplejson.dumps([{'value': -1, 'label': "Liikaa tuloksia"}]))
     freeCD = False
-
-    if(results > 1000):
+    
+    if(results > 100):
         return HttpResponse(simplejson.dumps([{'value': -1, 'label': "Liikaa tuloksia"}]))
-    if(results == 0):  # Plan B: Try FreeCD
-        freeCD = True
-        dbc.execute("SELECT cd_id, artist, title FROM freecd WHERE MATCH(artist, title) AGAINST(%s IN BOOLEAN MODE) GROUP BY artist, title", (request.POST['input'],))
 
     row = dbc.fetchone()
     results = []
@@ -307,7 +307,7 @@ def show_wishes(request):
             wish.discs = list()
             c['granted'].append(wish)
             continue
-        if(wish.track.find(" - ") > 0):
+        """if(wish.track.find(" - ") > 0):
             wish.discs = list()
             artist = wish.track.split(" - ")[0]
             track = wish.track.split(" - ")[1]
@@ -324,7 +324,7 @@ def show_wishes(request):
                 try:
                     wish.discs.append(match.disc)
                 except:
-                    continue
+                    continue"""
         c['not_granted'].append(wish)
     c.update(csrf(request))
     return render_to_response("discdb/toiveet.html", c, context_instance=RequestContext(request))
