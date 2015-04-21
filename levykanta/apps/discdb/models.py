@@ -36,8 +36,9 @@ class Wish(models.Model):
 class NewDiscForm(forms.ModelForm):
     class Meta:
         model = Disc
-        #fields = ('owner', 'barcode')
-        exclude = ('returned', 'tracks')
+        fields = ('artist', 'name', 'owner', 'cdlp', 'barcode')
+	# Meta.exclude is deprecated/ANi 2015-04-21
+        #exclude = ('returned', 'tracks')
         widgets = {
             'owner': forms.TextInput(),
             'cdlp': forms.Select(choices=([("CD", "CD"), ("LP","LP")]),  attrs={}),
@@ -48,6 +49,7 @@ class NewDiscForm(forms.ModelForm):
 class DiscForm(forms.ModelForm):
     class Meta:
         model = Disc
+        fields = ('artist', 'name', 'owner', 'returned', 'cdlp', 'barcode', 'tracks')
 
 class BarcodeForm(forms.ModelForm):
     class Meta:
@@ -62,4 +64,5 @@ class TrackForm(forms.ModelForm):
 class WishForm(forms.ModelForm):
     class Meta:
         model = Wish
-        exclude = ('done',)
+        fields = ('source', 'track')
+        #exclude = ('done',)
