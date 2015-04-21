@@ -12,7 +12,7 @@ from django.shortcuts import render_to_response
 from django.core import serializers
 from django.conf import settings
 
-import simplejson
+import json as simplejson
 import MySQLdb # Discogs
 
 # Create your views here.
