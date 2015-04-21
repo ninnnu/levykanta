@@ -9,8 +9,12 @@
         {% else %}
             <li>{{ cd.artist }} - {{ cd.name }}
         {% endif %}
+        {% if cd.cdlp == "LP" %}
+	   <strong>(LP)</strong>
+        {% endif %}
         {% if cd.returned %}
 		(Palautettu)
+		<form style="display:inline;" action="/discdb/reinsert/", method="POST"><input type="hidden" name="discid" value="{{ cd.id }}"><input type="submit" value="Takaisin kantaan" style="display:inline;"></form>
 	{% endif %}
         </li>
     {% endfor %}

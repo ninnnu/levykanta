@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 {% if cd %}
-<h2>{{ cd.artist }} - {{ cd.name }}</h2>
+<h2>{{ cd.artist }} - {{ cd.name }} ({{ cd.cdlp }})</h2>
 <h3>Kappalelista</h3>
 <ul>
     {% for track in tracks %}

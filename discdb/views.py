@@ -112,7 +112,7 @@ def suggest(request):
             return HttpResponse(simplejson.dumps([{'value': -1, 'label': "Liikaa tuloksia"}]))
     freeCD = False
     
-    if(results > 100):
+    if(results >= 100):
         return HttpResponse(simplejson.dumps([{'value': -1, 'label': "Liikaa tuloksia"}]))
 
     row = dbc.fetchone()
@@ -351,6 +351,18 @@ def return_disc(request):
             d.save()
             c['returned'] = True
     return render_to_response("discdb/return.html", c, context_instance=RequestContext(request))
+
+def reinsert_disc(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect("/discdb/all/")
+    c = {}
+    if(request.method == "POST"):
+        if(request.POST['discid']):
+            d = Disc.objects.get(id = request.POST['discid'])
+            d.returned = False
+            d.save()
+            c['returned'] = False
+    return HttpResponseRedirect("/discdb/all/")
 
 def is_duplicate(artist_, name_):
     d = Disc.objects.filter(name = name_, artist = artist_)

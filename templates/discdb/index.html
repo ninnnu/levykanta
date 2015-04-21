@@ -6,6 +6,9 @@
         {% if user %}
             <li><a href="/discdb/show/{{ cd.id }}/">{{ cd.artist }} - {{ cd.name }}</a>
             (<a href="/discdb/from/{{cd.owner.id}}/">{{cd.owner.name}}</a>)
+            {% if cd.cdlp == "LP" %}
+		<strong>(LP)</strong>
+            {% endif %}
         {% else %}
             <li>{{ cd.artist }} - {{ cd.name }}</li>
         {% endif %}
