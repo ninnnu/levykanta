@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, include, url
 
-from django.apps import apps
-if not apps.ready:
-    apps.get_models()
+from django.apps import apps as django_apps
+if not django_apps.ready:
+    django_apps.get_models()
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
