@@ -6,7 +6,7 @@ class Disc(models.Model):
     artist = models.CharField("Artisti", max_length = 100)
     name = models.CharField("Levyn nimi", max_length = 100)
     owner = models.ForeignKey('Owner', related_name='owners', unique=False)
-    returned = models.BooleanField("Palautettu")
+    returned = models.BooleanField("Palautettu", default=False)
     cdlp = models.CharField("CD/LP", max_length=20, default="CD")
     barcode = models.CharField("Viivakoodi", max_length = 16, blank=True)
     tracks = models.ManyToManyField('Track', related_name='tracks', db_table="Discs_to_Tracks", blank = True)
