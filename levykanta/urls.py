@@ -1,8 +1,8 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 
-from django.db.models.loading import cache as model_cache
-if not model_cache.loaded:
-    model_cache.get_models()
+from django.apps import apps as django_apps
+if not django_apps.ready:
+    django_apps.get_models()
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin

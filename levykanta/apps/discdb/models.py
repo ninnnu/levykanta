@@ -6,7 +6,7 @@ class Disc(models.Model):
     artist = models.CharField("Artisti", max_length = 100)
     name = models.CharField("Levyn nimi", max_length = 100)
     owner = models.ForeignKey('Owner', related_name='owners', unique=False)
-    returned = models.BooleanField("Palautettu")
+    returned = models.BooleanField("Palautettu", default=False)
     cdlp = models.CharField("CD/LP", max_length=20, default="CD")
     barcode = models.CharField("Viivakoodi", max_length = 16, blank=True)
     tracks = models.ManyToManyField('Track', related_name='tracks', db_table="Discs_to_Tracks", blank = True)
@@ -36,8 +36,9 @@ class Wish(models.Model):
 class NewDiscForm(forms.ModelForm):
     class Meta:
         model = Disc
-        #fields = ('owner', 'barcode')
-        exclude = ('returned', 'tracks')
+        fields = ('artist', 'name', 'owner', 'cdlp', 'barcode')
+	# Meta.exclude is deprecated/ANi 2015-04-21
+        #exclude = ('returned', 'tracks')
         widgets = {
             'owner': forms.TextInput(),
             'cdlp': forms.Select(choices=([("CD", "CD"), ("LP","LP")]),  attrs={}),
@@ -48,6 +49,7 @@ class NewDiscForm(forms.ModelForm):
 class DiscForm(forms.ModelForm):
     class Meta:
         model = Disc
+        fields = ('artist', 'name', 'owner', 'returned', 'cdlp', 'barcode', 'tracks')
 
 class BarcodeForm(forms.ModelForm):
     class Meta:
@@ -62,4 +64,5 @@ class TrackForm(forms.ModelForm):
 class WishForm(forms.ModelForm):
     class Meta:
         model = Wish
-        exclude = ('done',)
+        fields = ('source', 'track')
+        #exclude = ('done',)
